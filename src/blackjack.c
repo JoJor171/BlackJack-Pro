@@ -2,6 +2,7 @@
 #include "blackjack.h"
 #include "mazo.h"
 #include "carta.h"
+#include "utils.h"
 
 
 void mostrarMenu() {
