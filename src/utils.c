@@ -2,6 +2,7 @@
   src/utils.c
 ----------------------------------------------------*/
 #include <stdio.h>
+#include <stdlib.h>
 #include "utils.h"
 #include "carta.h"
 
@@ -26,4 +27,8 @@ int valorMano(Carta *mano, int num_cartas) {
         ases--;
     }
     return total;
+}
+
+int rng_int(int a, int b) {
+    return a + rand() % (b - a + 1);
 }
