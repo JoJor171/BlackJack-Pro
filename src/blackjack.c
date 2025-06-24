@@ -17,7 +17,7 @@ void jugarBlackJack(Jugador *jugador) {
         printf("Error al crear el mazo.\n");
         return;
     }
-
+    // Manejo de fichas
     int apuesta = 0;
     printf("Tienes %d fichas.\n", jugador->fichas);
     printf("¿Cuántas fichas deseas apostar? > ");
@@ -217,6 +217,28 @@ void jugarBlackJack(Jugador *jugador) {
     } else {
         printf("\nEmpate.\n");
     }
+    // Actualizar fichas del jugador
+    int resultado = 0;
+    if (surrender) {
+        resultado = -1; // Pierde la Mitad de la apuesta
+    } else if (total_banca > 21 || total_jugador > total_banca){
+        resultado = 1; // Gana la apuesta 
+    } else if (total_jugador < total_banca){
+        resultado = -1; //Pierde la apuesta
+    } else{
+        resultado = 0; // Empate 
+    }
+    if (resultado == 1) {
+        printf("¡Ganaste! Ganas %d fichas.\n", apuesta * 2);
+        jugador->fichas += apuesta * 2;
+    } else if (resultado == 0) {
+        printf("Empate. Recuperas tu apuesta.\n");
+        jugador->fichas += apuesta;
+    } else {
+        printf("Perdiste %d fichas.\n", apuesta);
+    }
+
+    printf("Ahora tienes %d fichas.\n", jugador->fichas);
 
     mazo_destruir(mazo);
 }
