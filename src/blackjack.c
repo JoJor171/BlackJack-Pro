@@ -11,12 +11,23 @@ void mostrarMenu() {
     printf("2. Salir\n");
 }
 
-void jugarBlackJack() {
+void jugarBlackJack(Jugador *jugador) {
     Mazo *mazo = mazo_crear(1);
     if (!mazo) {
         printf("Error al crear el mazo.\n");
         return;
     }
+
+    int apuesta = 0;
+    printf("Tienes %d fichas.\n", jugador->fichas);
+    printf("¿Cuántas fichas deseas apostar? > ");
+    scanf("%d", &apuesta);
+    if (apuesta <= 0 || apuesta > jugador->fichas) {
+        printf("Apuesta inválida. No tienes suficientes fichas.\n");
+        mazo_destruir(mazo);
+        return;
+    }
+    jugador->fichas -= apuesta;
 
     Carta jugador[12], banca[12], jugador2[12];
     int num_jugador = 0, num_banca = 0, num_jugador2 = 0;

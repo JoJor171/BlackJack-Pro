@@ -5,6 +5,7 @@
 
 int main() {
     int opcion;
+    Jugador jugador = { .fichas = 300 };
     srand(time(NULL)); // Inicializa la semilla para números aleatorios
 
     do {
@@ -14,7 +15,7 @@ int main() {
 
         switch(opcion) {
             case 1:
-                jugarBlackJack();
+                jugarBlackJack(&jugador);
                 break;
             case 2:
                 printf("¡Gracias por jugar!\n");

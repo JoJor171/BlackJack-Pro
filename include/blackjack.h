@@ -5,9 +5,9 @@
 
 typedef struct{
     int fichas;
-} jugador;
+} Jugador;
 
 void mostrarMenu();
-void jugarBlackJack(jugador *jugador);
+void jugarBlackJack(Jugador *jugador);
 
 #endif
