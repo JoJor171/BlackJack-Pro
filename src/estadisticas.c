@@ -30,3 +30,24 @@ void mostrarEstadisticas(Jugador *jugador) {
     printf("Apuestas laterales ganadas: %d\n", jugador->sidebets_ganadas);
     printf("================================\n\n");
 }
+
+void guardarProgreso(Jugador *jugador) {
+    FILE *f = fopen("progreso.dat", "wb");
+    if (!f) {
+        printf("Error al guardar progreso.\n");
+        return;
+    }
+    fwrite(jugador, sizeof(Jugador), 1, f);
+    fclose(f);
+    printf("Progreso guardado correctamente.\n");
+}
+
+int cargarProgreso(Jugador *jugador) {
+    FILE *f = fopen("progreso.dat", "rb");
+    if (!f) {
+        // No existe progreso previo
+        return 0;
+    }
+    fread(jugador, sizeof(Jugador), 1, f);
+    fclose(f);
+    return 1;
