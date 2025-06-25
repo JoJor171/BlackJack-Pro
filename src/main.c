@@ -10,17 +10,16 @@ int main() {
     if (cargarProgreso(&jugador)) {
         printf("¡Progreso cargado! Tienes %d fichas.\n", jugador.fichas);
     } else {
-        printf("No se encontró progreso anterior. Iniciando con 300 fichas.\n");
+        printf("No se encontro progreso anterior. Iniciando con 300 fichas.\n");
         inicializarEstadisticas(&jugador);
     }
 
     srand(time(NULL)); // Inicializa la semilla para números aleatorios
 
     do {
-        mostrarMenu();
-        printf("Selecciona una opcion: \n");
+        printf("\nSelecciona una opcion: \n");
         printf("1. Jugar\n");
-        printf("2. Mostrar estadísticas\n");
+        printf("2. Mostrar estadisticas\n");
         printf("3. Guardar progreso\n");
         printf("4. Salir\n");
         scanf("%d", &opcion);

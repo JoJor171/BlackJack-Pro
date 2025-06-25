@@ -9,11 +9,11 @@
 
 
 
-void mostrarMenu() {
+/*void mostrarMenu() {
     printf("=== BlackJack ===\n");
     printf("1. Jugar\n");
     printf("2. Salir\n");
-}
+}*/
 
 // ...existing code...
 void jugarBlackJack(Jugador *jugador) {
@@ -28,10 +28,10 @@ void jugarBlackJack(Jugador *jugador) {
     // Manejo de fichas
     int apuesta = 0;
     printf("Tienes %d fichas.\n", jugador->fichas);
-    printf("¿Cuántas fichas deseas apostar? > ");
+    printf("Cuantas fichas deseas apostar? > ");
     scanf("%d", &apuesta);
     if (apuesta <= 0 || apuesta > jugador->fichas) {
-        printf("Apuesta inválida. No tienes suficientes fichas.\n");
+        printf("Apuesta invalida. No tienes suficientes fichas.\n");
         mazo_destruir(mazo);
         return;
     }
@@ -49,34 +49,28 @@ void jugarBlackJack(Jugador *jugador) {
     
     // Apuesta lateral: Pareja Perfecta
     if (jugador->fichas > 0) {
+        printf("\n--- Apuestas Laterales ---\n");
         printf("Pareja Perfecta: Ganas si tus dos primeras cartas son iguales en valor y palo (ejemplo: dos 7 de corazones).\n");
-        printf("¿Deseas apostar a 'Pareja Perfecta'? (s/n): ");
-        scanf(" %c", &opcion_lateral);
-        if (opcion_lateral == 's' || opcion_lateral == 'S') {
-            do {
-                printf("¿Cuántas fichas apuestas a 'Pareja Perfecta'? (Tienes %d) > ", jugador->fichas);
-                scanf("%d", &apuesta_pareja);
-                if (apuesta_pareja < 0 || apuesta_pareja > jugador->fichas)
-                    printf("Cantidad inválida.\n");
-            } while (apuesta_pareja < 0 || apuesta_pareja > jugador->fichas);
-            jugador->fichas -= apuesta_pareja;
-        }
+        do {
+            printf("Cuántas fichas apuestas a 'Pareja Perfecta'? (0 para no apostar, tienes %d) > ", jugador->fichas);
+            scanf("%d", &apuesta_pareja);
+            if (apuesta_pareja < 0 || apuesta_pareja > jugador->fichas)
+                printf("Cantidad invalida.\n");
+        } while (apuesta_pareja < 0 || apuesta_pareja > jugador->fichas);
+        jugador->fichas -= apuesta_pareja;
     }
+
 
     // Apuesta lateral: 21+3
     if (jugador->fichas > 0) {
-        printf("21+3: Ganas si tus dos primeras cartas y la carta visible de la banca forman una combinación de póker (trío, escalera o color).\n\n");
-        printf("¿Deseas apostar a '21+3'? (s/n): ");
-        scanf(" %c", &opcion_lateral);
-        if (opcion_lateral == 's' || opcion_lateral == 'S') {
-            do {
-                printf("¿Cuántas fichas apuestas a '21+3'? (Tienes %d) > ", jugador->fichas);
-                scanf("%d", &apuesta_21mas3);
-                if (apuesta_21mas3 < 0 || apuesta_21mas3 > jugador->fichas)
-                    printf("Cantidad inválida.\n");
-            } while (apuesta_21mas3 < 0 || apuesta_21mas3 > jugador->fichas);
-            jugador->fichas -= apuesta_21mas3;
-        }
+        printf("\n21+3: Ganas si tus dos primeras cartas y la carta visible de la banca forman una combinación de póker (trío, escalera o color).\n");
+        do {
+            printf("¿Cuántas fichas apuestas a '21+3'? (0 para no apostar, tienes %d) > ", jugador->fichas);
+            scanf("%d", &apuesta_21mas3);
+            if (apuesta_21mas3 < 0 || apuesta_21mas3 > jugador->fichas)
+                printf("Cantidad inválida.\n");
+        } while (apuesta_21mas3 < 0 || apuesta_21mas3 > jugador->fichas);
+        jugador->fichas -= apuesta_21mas3;
     }
 
 
@@ -105,12 +99,12 @@ void jugarBlackJack(Jugador *jugador) {
     }
 // ...continúa el juego normal...
 
-    printf("\n=== Tus cartas ===\n");
-    mostrarCartas("Jugador", mano1, num_mano1);
-    printf("Total jugador: %d\n", valorMano(mano1, num_mano1));
-    printf("\nCarta visible de la banca:\n");
-    mostrarCartas("Banca", &banca[0], 1);
-    printf("Total banca (visible): %d\n", valorMano(&banca[0], 1));
+    
+    mostrarCartas("\nTus cartas:", mano1, num_mano1);
+    printf("Total: %d\n", valorMano(mano1, num_mano1));
+    printf("\nCarta del crupier:", &banca[0], 1);
+    //mostrarCartas("Banca", &banca[0], 1);
+    printf("Total: %d\n", valorMano(&banca[0], 1));
     // Opciones del jugador
     while (1) {
         printf("\nElige una opcion:\n");
@@ -123,21 +117,21 @@ void jugarBlackJack(Jugador *jugador) {
         scanf(" %c", &opcion);
 
         if (opcion == '1') { // Hit
-            arbol = insertarDecision(arbol, "Hit");
+            arbol = insertarDecision(arbol, "Pediste");
             mano1[num_mano1++] = mazo_robar(mazo);
             printf("\nTus cartas ahora:\n");
-            mostrarCartas("Jugador", mano1, num_mano1);
-            printf("Total jugador: %d\n", valorMano(mano1, num_mano1));
+            mostrarCartas("Tus cartas", mano1, num_mano1);
+            printf("Total: %d\n", valorMano(mano1, num_mano1));
             if (valorMano(mano1, num_mano1) > 21) {
                 printf("\nTe pasaste de 21. Pierdes!\n");
                 mazo_destruir(mazo);
                 return;
             }
         } else if (opcion == '2') { // Stand
-            arbol = insertarDecision(arbol, "Stand");
+            arbol = insertarDecision(arbol, "Te plantaste");
             break;
         } else if (opcion == '3') { // Split
-            arbol = insertarDecision(arbol, "Split");
+            arbol = insertarDecision(arbol, "Dividiste");
             if (num_mano1 == 2 && mano1[0].valor == mano1[1].valor) {
                 split = 1;
                 mano2[num_mano2++] = mano1[1];
@@ -152,7 +146,7 @@ void jugarBlackJack(Jugador *jugador) {
                 printf("No puedes dividir. Solo puedes dividir si tus dos primeras cartas son iguales.\n");
             }
         } else if (opcion == '4') { // Double Down
-            arbol = insertarDecision(arbol, "Double Down");
+            arbol = insertarDecision(arbol, "Doblaste");
             if (num_mano1 == 2) {
                 double_down = 1;
                 mano1[num_mano1++] = mazo_robar(mazo);
@@ -163,7 +157,7 @@ void jugarBlackJack(Jugador *jugador) {
                 printf("Solo puedes doblar con las dos primeras cartas.\n");
             }
         } else if (opcion == '5') { // Surrender
-            arbol = insertarDecision(arbol, "Surrender");
+            arbol = insertarDecision(arbol, "Te rendiste");
             surrender = 1;
             printf("\nTe has rendido. Pierdes la mitad de tu apuesta.\n");
             mazo_destruir(mazo);
@@ -185,6 +179,37 @@ void jugarBlackJack(Jugador *jugador) {
             if (opcion == 's' || opcion == 'S') {
                 mano1[n1++] = mazo_robar(mazo);
                 mostrarCartas("Jugador 1", mano1, n1);
+
+            // Bonificaciones para Mano 1 (split)
+                if (n1 == 5 && valorMano(mano1, n1) <= 21) {
+                    int bono = apuesta * 2;
+                    printf("\n¡BONIFICACIÓN en Mano 1! Cinco cartas sin pasarte de 21. Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n1 == 2 && valorMano(mano1, n1) == 21) {
+                    int bono = apuesta;
+                    printf("\n¡BONIFICACIÓN en Mano 1! ¡Blackjack natural! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n1 >= 3 &&
+                    mano1[0].valor == 7 &&
+                    mano1[1].valor == 7 &&
+                    mano1[2].valor == 7) {
+                    int bono = apuesta * 5;
+                    printf("\n¡BONIFICACIÓN en Mano 1! ¡Tres sietes (777)! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n1 == 6 && valorMano(mano1, n1) <= 21) {
+                    int bono = apuesta * 4;
+                    printf("\n¡BONIFICACIÓN en Mano 1! ¡Seis cartas sin pasarte de 21! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n1 == 5 && valorMano(mano1, n1) == 21) {
+                    int bono = apuesta * 3;
+                    printf("\n¡BONIFICACIÓN en Mano 1! ¡21 exacto con cinco cartas! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+
                 if (valorMano(mano1, n1) > 21) {
                     printf("Mano 1 se paso de 21!\n");
                     bust1 = 1;
@@ -204,6 +229,37 @@ void jugarBlackJack(Jugador *jugador) {
             if (opcion == 's' || opcion == 'S') {
                 mano2[n2++] = mazo_robar(mazo);
                 mostrarCartas("Jugador 2", mano2, n2);
+
+            // Para Mano 2 (usa n2 como número de cartas en mano2)
+                if (n2 == 5 && valorMano(mano2, n2) <= 21) {
+                    int bono = apuesta * 2;
+                    printf("\n¡BONIFICACIÓN en Mano 2! Cinco cartas sin pasarte de 21. Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n2 == 2 && valorMano(mano2, n2) == 21) {
+                    int bono = apuesta;
+                    printf("\n¡BONIFICACIÓN en Mano 2! ¡Blackjack natural! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n2 >= 3 &&
+                    mano2[0].valor == 7 &&
+                    mano2[1].valor == 7 &&
+                    mano2[2].valor == 7) {
+                    int bono = apuesta * 5;
+                    printf("\n¡BONIFICACIÓN en Mano 2! ¡Tres sietes (777)! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n2 == 6 && valorMano(mano2, n2) <= 21) {
+                    int bono = apuesta * 4;
+                    printf("\n¡BONIFICACIÓN en Mano 2! ¡Seis cartas sin pasarte de 21! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+                if (n2 == 5 && valorMano(mano2, n2) == 21) {
+                    int bono = apuesta * 3;
+                    printf("\n¡BONIFICACIÓN en Mano 2! ¡21 exacto con cinco cartas! Ganas %d fichas extra.\n", bono);
+                    jugador->fichas += bono;
+                }
+
                 if (valorMano(mano2, n2) > 21) {
                     printf("Mano 2 se paso de 21!\n");
                     bust2 = 1;
@@ -214,19 +270,19 @@ void jugarBlackJack(Jugador *jugador) {
             }
         }
         // Turno de la banca
-        printf("\n=== Turno de la banca ===\n");
-        mostrarCartas("Banca", banca, num_banca);
-        printf("Total banca: %d\n", valorMano(banca, num_banca));
+        printf("\n=== Turno del crupier ===\n");
+        mostrarCartas("Crupier", banca, num_banca);
+        printf("Total: %d\n", valorMano(banca, num_banca));
         while (valorMano(banca, num_banca) < 17) {
-            printf("La banca pide carta...\n");
+            printf("El crupier pide carta...\n");
             banca[num_banca++] = mazo_robar(mazo);
-            mostrarCartas("Banca", banca, num_banca);
+            mostrarCartas("Crupier", banca, num_banca);
         }
         int total_banca = valorMano(banca, num_banca);
         printf("\n=== Resultado final ===\n");
         printf("Cartas banca: ");
         mostrarCartas("", banca, num_banca);
-        printf("Total banca: %d\n", total_banca);
+        printf("Total: %d\n", total_banca);
 
         int total1 = valorMano(mano1, n1);
         int total2 = valorMano(mano2, n2);
@@ -250,9 +306,15 @@ void jugarBlackJack(Jugador *jugador) {
             printf("Perdiste.\n");
         else
             printf("Empate.\n");
-        printf("\nÁrbol de decisiones de esta partida:\n");
-        mostrarArbol(arbol);
-        printf("NULL\n");
+
+        // Determina si ganaste alguna mano (puedes ajustar la lógica si quieres que sea más estricto)
+        int gano = 0;
+        if ((!bust1 && (total_banca > 21 || total1 > total_banca)) ||
+            (!bust2 && (total_banca > 21 || total2 > total_banca))) {
+            gano = 1;
+        }
+        
+        mostrarArbol(arbol, gano);
 
         // Liberar memoria del árbol
         destruirArbol(arbol);
@@ -268,6 +330,44 @@ void jugarBlackJack(Jugador *jugador) {
         banca[num_banca++] = mazo_robar(mazo);
         mostrarCartas("Banca", banca, num_banca);
     }
+
+    // Bonificación: cinco cartas sin pasarse
+        if (num_mano1 == 5 && valorMano(mano1, num_mano1) <= 21) {
+            int bono = apuesta * 2;
+            printf("\n¡BONIFICACIÓN! Cinco cartas sin pasarte de 21. Ganas %d fichas extra.\n", bono);
+            jugador->fichas += bono;
+        }
+
+        // Bonificación: blackjack natural
+        if (num_mano1 == 2 && valorMano(mano1, num_mano1) == 21) {
+            int bono = apuesta;
+            printf("\n¡BONIFICACIÓN! ¡Blackjack natural! Ganas %d fichas extra.\n", bono);
+            jugador->fichas += bono;
+        }
+
+        // Bonificación: tres sietes (777)
+        if (num_mano1 >= 3 &&
+            mano1[0].valor == 7 &&
+            mano1[1].valor == 7 &&
+            mano1[2].valor == 7) {
+            int bono = apuesta * 5;
+            printf("\n¡BONIFICACIÓN! ¡Tres sietes (777)! Ganas %d fichas extra.\n", bono);
+            jugador->fichas += bono;
+        }
+
+        // Bonificación: seis cartas sin pasarse
+        if (num_mano1 == 6 && valorMano(mano1, num_mano1) <= 21) {
+            int bono = apuesta * 4;
+            printf("\n¡BONIFICACIÓN! ¡Seis cartas sin pasarte de 21! Ganas %d fichas extra.\n", bono);
+            jugador->fichas += bono;
+        }
+
+        // Bonificación: 21 exacto con cinco cartas
+        if (num_mano1 == 5 && valorMano(mano1, num_mano1) == 21) {
+            int bono = apuesta * 3;
+            printf("\n¡BONIFICACIÓN! ¡21 exacto con cinco cartas! Ganas %d fichas extra.\n", bono);
+            jugador->fichas += bono;
+        }
 
     int total_jugador = valorMano(mano1, num_mano1);
     int total_banca = valorMano(banca, num_banca);
@@ -331,9 +431,10 @@ void jugarBlackJack(Jugador *jugador) {
     if (split) jugador->split_usado++;
     if (double_down) jugador->double_usado++;
     if (surrender) jugador->surrender_usado++;
+
+    int gano = (resultado == 1) ? 1 : 0;
     printf("\nÁrbol de decisiones de esta partida:\n");
-    mostrarArbol(arbol);
-    printf("NULL\n");
+    mostrarArbol(arbol, gano);
 
     // Liberar memoria del árbol
     destruirArbol(arbol);

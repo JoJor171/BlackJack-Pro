@@ -3,20 +3,12 @@
 
 typedef struct NodoDecision {
     char decision[32];
-    struct NodoDecision *izq;
-    struct NodoDecision *der;
+    struct NodoDecision *sig;
 } NodoDecision;
 
-// Crear nodo nuevo
 NodoDecision* crearNodo(const char *decision);
-
-// Insertar en el árbol (simple: insertamos siempre a la izquierda primero)
-NodoDecision* insertarDecision(NodoDecision *raiz, const char *decision);
-
-// Mostrar árbol en orden
-void mostrarArbol(NodoDecision *raiz);
-
-// Liberar memoria del árbol
-void destruirArbol(NodoDecision *raiz);
+NodoDecision* insertarDecision(NodoDecision *head, const char *decision);
+void mostrarArbol(NodoDecision *head , int gano);
+void destruirArbol(NodoDecision *head);
 
 #endif
