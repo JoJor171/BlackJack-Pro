@@ -84,6 +84,7 @@ void jugarBlackJack(Jugador *jugador) {
     if (apuesta_pareja > 0 && esParejaPerfecta(mano1[0], mano1[1])) {
         printf("¡Ganaste la apuesta 'Pareja Perfecta'! Premio: %d fichas\n", apuesta_pareja * 25);
         jugador->fichas += apuesta_pareja * 25;
+        jugador->sidebets_ganadas++;
     } else if (apuesta_pareja > 0) {
         printf("No ganaste la apuesta 'Pareja Perfecta'.\n");
     }
@@ -92,6 +93,7 @@ void jugarBlackJack(Jugador *jugador) {
     if (apuesta_21mas3 > 0 && esVeintiunoMasTres(mano1[0], mano1[1], banca[0])) {
         printf("¡Ganaste la apuesta '21+3'! Premio: %d fichas\n", apuesta_21mas3 * 30);
         jugador->fichas += apuesta_21mas3 * 30;
+        jugador->sidebets_ganadas++;
     } else if (apuesta_21mas3 > 0) {
         printf("No ganaste la apuesta '21+3'.\n");
     }
@@ -296,7 +298,26 @@ void jugarBlackJack(Jugador *jugador) {
     }
 
     printf("Ahora tienes %d fichas.\n", jugador->fichas);
+    jugador->partidas_jugadas++;
 
+    if (resultado == 1) { // Ganó
+        jugador->ganadas++;
+        jugador->racha_actual++;
+        if (jugador->racha_actual > jugador->racha_maxima)
+            jugador->racha_maxima = jugador->racha_actual;
+    } else if (resultado == 0) { // Empate
+        jugador->empatadas++;
+    } else { // Perdió
+        jugador->perdidas++;
+        jugador->racha_actual = 0;
+    }
+
+    if (split) jugador->split_usado++;
+    if (double_down) jugador->double_usado++;
+    if (surrender) jugador->surrender_usado++;
     mazo_destruir(mazo);
 }
+
+    
+
 // ...existing

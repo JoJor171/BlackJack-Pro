@@ -2,15 +2,20 @@
 #include <stdlib.h>
 #include <time.h>
 #include "blackjack.h"
+#include "estadisticas.h"
 
 int main() {
     int opcion;
-    Jugador jugador = { .fichas = 300 };
+    Jugador jugador;
+    inicializarEstadisticas(&jugador);
     srand(time(NULL)); // Inicializa la semilla para números aleatorios
 
     do {
         mostrarMenu();
-        printf("Selecciona una opción: ");
+        printf("Selecciona una opcion: \n");
+        printf("1. Jugar\n");
+        printf("2. Mostrar estadísticas\n");
+        printf("3. Salir\n");
         scanf("%d", &opcion);
 
         switch(opcion) {
@@ -18,6 +23,9 @@ int main() {
                 jugarBlackJack(&jugador);
                 break;
             case 2:
+                mostrarEstadisticas(&jugador);
+                break;
+            case 3 :
                 printf("¡Gracias por jugar!\n");
                 break;
             default:
