@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "blackjack.h"
-#include "estadisticas.h"
+#include "utils.h"
 
 int main() {
     int opcion;
@@ -10,18 +10,21 @@ int main() {
     if (cargarProgreso(&jugador)) {
         printf("¡Progreso cargado! Tienes %d fichas.\n", jugador.fichas);
     } else {
-        printf("No se encontro progreso anterior. Iniciando con 300 fichas.\n");
+        printf("Iniciando Blackjack Pro\n");
+        fichasIniciales(&jugador.fichas);
         inicializarEstadisticas(&jugador);
     }
 
     srand(time(NULL)); // Inicializa la semilla para números aleatorios
 
     do {
-        printf("\nSelecciona una opcion: \n");
-        printf("1. Jugar\n");
-        printf("2. Mostrar estadisticas\n");
-        printf("3. Guardar progreso\n");
-        printf("4. Salir\n");
+        printf("\n===== BLACKJACK CASINO PRO =====\n\n");
+        printf("1. Jugar nueva ronda\n");
+        printf("2. Ver estadísticas y logros\n");
+        printf("3. Ver árbol de decisiones\n");
+        printf("4. Ver historial de apuestas\n");
+        printf("5. Guardar progreso\n");
+        printf("6. Salir\n");
         scanf("%d", &opcion);
 
         switch(opcion) {
@@ -32,15 +35,21 @@ int main() {
                 mostrarEstadisticas(&jugador);
                 break;
             case 3 :
-                guardarProgreso(&jugador);
+                //mostrarArbolDecisiones;
                 break;
             case 4 :
-                printf("¡Gracias por jugar!\n");
+                //mostrarHistorial;
+                break;
+            case 5:
+                guardarProgreso(&jugador);
+                printf("Proceso Guardado Exitosamente!!");
+                break;
+            case 6:
                 break;
             default:
                 printf("Opcion no válida. Intenta de nuevo.\n");
         }
-    } while(opcion != 4);
+    } while(opcion != 6);
 
     return 0;
 }
