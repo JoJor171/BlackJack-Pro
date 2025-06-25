@@ -51,3 +51,4 @@ int cargarProgreso(Jugador *jugador) {
     fread(jugador, sizeof(Jugador), 1, f);
     fclose(f);
     return 1;
+}
