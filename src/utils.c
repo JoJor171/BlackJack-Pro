@@ -56,7 +56,7 @@ int cargarProgreso(Jugador *jugador) {
     return 1;
 }
 
-int fichasiniciales(Jugador *fichas_iniciales) {
+int fichasIniciales(Jugador *fichas_iniciales) {
     float dinero;
     int fichas;
 
