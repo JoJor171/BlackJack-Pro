@@ -28,14 +28,14 @@ void mostrarArbol(NodoDecision *head, int gano) {
     while (tmp) {
         printf("%s", tmp->decision);
         // Comentarios graciosos del crupier
-        if (strcmp(tmp->decision, "Pedir") == 0)
-            printf(" (¡Otra carta, valiente!)");
+        if (strcmp(tmp->decision, "Pediste") == 0)
+            printf(" (Otra carta, valiente!)");
         else if (strcmp(tmp->decision, "Plantarse") == 0)
-            printf(" (¿Te asustaste?)");
+            printf(" (Te asustaste?)");
         else if (strcmp(tmp->decision, "Doblar") == 0)
-            printf(" (¡Apostando fuerte, eh!)");
+            printf(" (Apostando fuerte, eh!)");
         else if (strcmp(tmp->decision, "Dividir") == 0)
-            printf(" (¡Doble o nada!)");
+            printf(" (Doble o nada!)");
         if (tmp->sig)
             printf(" -> ");
         tmp = tmp->sig;
@@ -44,7 +44,7 @@ void mostrarArbol(NodoDecision *head, int gano) {
     if (gano)
         printf("¡Felicidades, ganaste esta ronda! El crupier te aplaude (por dentro).\n");
     else
-        printf("Perdiste... El crupier intenta no sonreír demasiado.\n");
+        printf("Perdiste... El crupier intenta no sonreir demasiado.\n");
 }
 
 void destruirArbol(NodoDecision *head) {

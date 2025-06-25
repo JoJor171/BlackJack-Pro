@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "blackjack.h"
+#include "historial.h"
 #include "arbol.h"
 #include "utils.h"
 
@@ -15,6 +16,7 @@ int main() {
         printf("Iniciando Blackjack Pro\n");
         fichasIniciales(&jugador.fichas);
         inicializarEstadisticas(&jugador);
+        historial_init(&jugador.historial);
     }
 
     srand(time(NULL)); // Inicializa la semilla para números aleatorios
@@ -22,8 +24,8 @@ int main() {
     do {
         printf("\n===== BLACKJACK CASINO PRO =====\n\n");
         printf("1. Jugar nueva ronda\n");
-        printf("2. Ver estadisticas y logros\n");
-        printf("3. Ver arbol de decisiones\n");
+        printf("2. Ver estadisticas \n");
+        printf("3. Ver el ultimo arbol de decisiones\n");
         printf("4. Ver historial de apuestas\n");
         printf("5. Guardar progreso\n");
         printf("6. Salir\n");
@@ -32,19 +34,25 @@ int main() {
         switch(opcion) {
             case 1:
                 jugarBlackJack(&jugador);
+                if (jugador.fichas == 0){
+                    opcion = 6;
+                    printf("Lo siento, te quedaste sin fichas no podras seguir jugando.");
+                };
                 break;
             case 2:
                 mostrarEstadisticas(&jugador);
                 break;
             case 3 :
-                //mostrarArbol();
+                if (jugador.arbol_actual)
+                    mostrarArbol(jugador.arbol_actual, 0); // Cambia 0 por 1 si quieres mostrar "ganó", o guarda ese valor en Jugador
+                else
+                    printf("No hay árbol de decisiones para mostrar.\n");
                 break;
             case 4 :
-                //mostrarHistorial;
+                mostrarHistorial(&jugador.historial);
                 break;
             case 5:
                 guardarProgreso(&jugador);
-                printf("Proceso Guardado Exitosamente!!");
                 break;
             case 6:
                 break;

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "carta.h"
-#define VALOR_FICHA 100
+
 
 void mostrarCartas(const char *nombre, Carta *mano, int num_cartas) {
     printf("%s: ", nombre);
@@ -42,7 +42,7 @@ void guardarProgreso(Jugador *jugador) {
     }
     fwrite(jugador, sizeof(Jugador), 1, f);
     fclose(f);
-    printf("Progreso guardado correctamente.\n");
+    printf("Progreso guardado correctamente.!!!\n\n\n");
 }
 
 int cargarProgreso(Jugador *jugador) {
@@ -56,19 +56,19 @@ int cargarProgreso(Jugador *jugador) {
     return 1;
 }
 
-int fichasIniciales(Jugador *fichas_iniciales) {
+void fichasIniciales(int *fichas) {
     float dinero;
-    int fichas;
+    int cantidad;
 
-    printf("¿Cuánto dinero quieres introducir en el casino? ");
-    while (scanf("%f", &dinero) != 1 || dinero <= 0) {
-        printf("Por favor, introduce una cantidad válida y positiva: ");
+    printf("Cuanto dinero quieres introducir en el casino? (minimo 100) :");
+    while (scanf("%f", &dinero) != 1 || dinero < 100) {
+        printf("Por favor, introduce una cantidad válida: ");
         // Limpiar el buffer de entrada
         while (getchar() != '\n');
     }
 
-    fichas = (int)(dinero / VALOR_FICHA);
-    printf("Tienes %d fichas (taza de converción[$100 = 1 ficha]).\n", fichas, VALOR_FICHA);
+    cantidad = (dinero / 100);
+    printf("Tienes %d fichas (taza de convercion[$100 = 1 ficha]).\n", cantidad);
 
-    return fichas;
+    *fichas = cantidad;
 }

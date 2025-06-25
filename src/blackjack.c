@@ -7,7 +7,7 @@
 #include "arbol.h"
 
 void inicializarEstadisticas(Jugador *jugador) {
-    jugador->fichas = 300;
+    jugador->fichas = jugador->fichas;
     stats_map_init(&jugador->estadisticas);
     stats_map_set(&jugador->estadisticas, "partidas_jugadas", 0);
     stats_map_set(&jugador->estadisticas, "ganadas", 0);
@@ -22,17 +22,17 @@ void inicializarEstadisticas(Jugador *jugador) {
 }
 
 void mostrarEstadisticas(Jugador *jugador) {
-    printf("\n=== Estadísticas del Jugador ===\n");
+    printf("\n=== Estadisticas del Jugador ===\n");
     printf("Fichas actuales: %d\n", jugador->fichas);
     printf("Partidas jugadas: %d\n", stats_map_get(&jugador->estadisticas, "partidas_jugadas"));
     printf("Ganadas: %d\n", stats_map_get(&jugador->estadisticas, "ganadas"));
     printf("Perdidas: %d\n", stats_map_get(&jugador->estadisticas, "perdidas"));
     printf("Empatadas: %d\n", stats_map_get(&jugador->estadisticas, "empatadas"));
     printf("Racha actual de victorias: %d\n", stats_map_get(&jugador->estadisticas, "racha_actual"));
-    printf("Racha máxima de victorias: %d\n", stats_map_get(&jugador->estadisticas, "racha_maxima"));
-    printf("Veces que usó Split: %d\n", stats_map_get(&jugador->estadisticas, "split_usado"));
-    printf("Veces que usó Double Down: %d\n", stats_map_get(&jugador->estadisticas, "double_usado"));
-    printf("Veces que se rindió (Surrender): %d\n", stats_map_get(&jugador->estadisticas, "surrender_usado"));
+    printf("Racha maxima de victorias: %d\n", stats_map_get(&jugador->estadisticas, "racha_maxima"));
+    printf("Veces que usO Split: %d\n", stats_map_get(&jugador->estadisticas, "split_usado"));
+    printf("Veces que usO Double Down: %d\n", stats_map_get(&jugador->estadisticas, "double_usado"));
+    printf("Veces que se rindiO (Surrender): %d\n", stats_map_get(&jugador->estadisticas, "surrender_usado"));
     printf("Apuestas laterales ganadas: %d\n", stats_map_get(&jugador->estadisticas, "sidebets_ganadas"));
     printf("================================\n\n");
 }
@@ -42,6 +42,7 @@ void jugarBlackJack(Jugador *jugador) {
     Carta mano1[12], banca[12], mano2[12];
     int num_mano1 = 0, num_banca = 0, num_mano2 = 0;
     int split = 0, double_down = 0, surrender = 0;
+    int fichas_antes = jugador->fichas;
     char opcion;
 
     NodoDecision *arbol = NULL;  
@@ -67,7 +68,7 @@ void jugarBlackJack(Jugador *jugador) {
         printf("\n--- Apuestas Laterales ---\n");
         printf("Pareja Perfecta: Ganas si tus dos primeras cartas son iguales en valor y palo (ejemplo: dos 7 de corazones).\n");
         do {
-            printf("Cuántas fichas apuestas a 'Pareja Perfecta'? (0 para no apostar, tienes %d) > ", jugador->fichas);
+            printf("Cuantas fichas apuestas a 'Pareja Perfecta'? (0 para no apostar, tienes %d) > ", jugador->fichas);
             scanf("%d", &apuesta_pareja);
             if (apuesta_pareja < 0 || apuesta_pareja > jugador->fichas)
                 printf("Cantidad invalida.\n");
@@ -77,12 +78,12 @@ void jugarBlackJack(Jugador *jugador) {
 
     // Apuesta lateral: 21+3
     if (jugador->fichas > 0) {
-        printf("\n21+3: Ganas si tus dos primeras cartas y la carta visible de la banca forman una combinación de póker (trío, escalera o color).\n");
+        printf("\n21+3: Ganas si tus dos primeras cartas y la carta visible de la banca forman una combinaciOn de pOker (trio, escalera o color).\n");
         do {
-            printf("¿Cuántas fichas apuestas a '21+3'? (0 para no apostar, tienes %d) > ", jugador->fichas);
+            printf("Cuantas fichas apuestas a '21+3'? (0 para no apostar, tienes %d) > ", jugador->fichas);
             scanf("%d", &apuesta_21mas3);
             if (apuesta_21mas3 < 0 || apuesta_21mas3 > jugador->fichas)
-                printf("Cantidad inválida.\n");
+                printf("Cantidad invalida.\n");
         } while (apuesta_21mas3 < 0 || apuesta_21mas3 > jugador->fichas);
         jugador->fichas -= apuesta_21mas3;
     }
@@ -95,7 +96,7 @@ void jugarBlackJack(Jugador *jugador) {
 
     // Evaluar Pareja Perfecta
     if (apuesta_pareja > 0 && esParejaPerfecta(mano1[0], mano1[1])) {
-        printf("¡Ganaste la apuesta 'Pareja Perfecta'! Premio: %d fichas\n", apuesta_pareja * 25);
+        printf("Ganaste la apuesta 'Pareja Perfecta'! Premio: %d fichas\n", apuesta_pareja * 25);
         jugador->fichas += apuesta_pareja * 25;
         stats_map_sum(&jugador->estadisticas, "sidebets_ganadas", 1);
     } else if (apuesta_pareja > 0) {
@@ -104,7 +105,7 @@ void jugarBlackJack(Jugador *jugador) {
 
     // Evaluar 21+3 (usando la carta visible de la banca)
     if (apuesta_21mas3 > 0 && esVeintiunoMasTres(mano1[0], mano1[1], banca[0])) {
-        printf("¡Ganaste la apuesta '21+3'! Premio: %d fichas\n", apuesta_21mas3 * 30);
+        printf("Ganaste la apuesta '21+3'! Premio: %d fichas\n", apuesta_21mas3 * 30);
         jugador->fichas += apuesta_21mas3 * 30;
         stats_map_sum(&jugador->estadisticas, "sidebets_ganadas", 1);
     } else if (apuesta_21mas3 > 0) {
@@ -113,8 +114,8 @@ void jugarBlackJack(Jugador *jugador) {
 
     mostrarCartas("\nTus cartas:", mano1, num_mano1);
     printf("Total: %d\n", valorMano(mano1, num_mano1));
-    printf("\nCarta del crupier:", &banca[0], 1);
-    printf("Total: %d\n", valorMano(&banca[0], 1));
+    mostrarCartas("\nCarta del crupier", &banca[0], 1);
+    printf("Total: %d\n", valorMano(&banca[0], 1)); 
 
     while (1) {
         printf("\nElige una opcion:\n");
@@ -134,6 +135,12 @@ void jugarBlackJack(Jugador *jugador) {
             printf("Total: %d\n", valorMano(mano1, num_mano1));
             if (valorMano(mano1, num_mano1) > 21) {
                 printf("\nTe pasaste de 21. Pierdes!\n");
+                historial_agregar(
+                    &jugador->historial,
+                    apuesta,                // cantidad apostada
+                    fichas_antes,           // fichas antes de la partida (debes g2r al inicio)
+                    jugador->fichas,        // fichas despues de la partida
+                    "Derrota");       // cadena de texto con el resultado
                 mazo_destruir(mazo);
                 return;
             }
@@ -153,7 +160,7 @@ void jugarBlackJack(Jugador *jugador) {
                 mostrarCartas("Jugador 2", mano2, num_mano2);
                 break;
             } else {
-                printf("No puedes dividir. Solo puedes dividir si tus dos primeras cartas son iguales.\n");
+                printf("No puedes dividir. Solo puedes dividir si tus dos primeras cartas.\n");
             }
         } else if (opcion == '4') { // Double Down
             arbol = insertarDecision(arbol, "Doblaste");
@@ -170,6 +177,12 @@ void jugarBlackJack(Jugador *jugador) {
             arbol = insertarDecision(arbol, "Te rendiste");
             surrender = 1;
             printf("\nTe has rendido. Pierdes la mitad de tu apuesta.\n");
+                            historial_agregar(
+                    &jugador->historial,
+                    apuesta,                // cantidad apostada
+                    fichas_antes,           // fichas antes de la partida (debes g2r al inicio)
+                    jugador->fichas,        // fichas despues de la partida
+                    "Surrender");       // cadena con el resultado
             mazo_destruir(mazo);
             stats_map_sum(&jugador->estadisticas, "surrender_usado", 1);
             return;
@@ -178,18 +191,35 @@ void jugarBlackJack(Jugador *jugador) {
         }
     }
 
-    // Si hubo split, jugar ambas manos (igual que antes, pero usa stats_map_sum para split_usado)
+    // Si hubo split, jugar ambas manos (igual que antes, pero usa stats_map_sum p2
     if (split) {
-        stats_map_sum(&jugador->estadisticas, "split_usado", 1);
-        // ... (resto del código de split igual, solo actualiza estadísticas si es necesario) ...
-        // Al final, muestra el árbol y libera memoria:
-        int gano = 0;
-        // ... lógica para determinar si ganó ...
-        mostrarArbol(arbol, gano);
-        destruirArbol(arbol);
-        mazo_destruir(mazo);
-        return;
-    }
+    stats_map_sum(&jugador->estadisticas, "split_usado", 1);
+
+    // Aqui deberias calcular el resultado real de la mano split.
+    // Por simplicidad, supongamos que el jugador pierde la mano split:
+    int resultado_split = -1; // Cambia esto según la logica real de tu juego
+
+    historial_agregar(
+        &jugador->historial,
+        apuesta,
+        fichas_antes,
+        jugador->fichas,
+        (resultado_split == 1) ? "Victoria" :
+        (resultado_split == 0) ? "Empate" : "Derrota"
+    );
+
+    int gano = (resultado_split == 1) ? 1 : 0;
+    printf("\nArbol de decisiones de esta partida:");
+    mostrarArbol(arbol, gano);
+
+    // Guarda el arbol en el jugador para mostrarlo despues
+    if (jugador->arbol_actual)
+        destruirArbol(jugador->arbol_actual);
+    jugador->arbol_actual = arbol;
+
+    mazo_destruir(mazo);
+    return;
+}
 
     // Turno de la banca
     printf("\n=== Turno de la banca ===\n");
@@ -200,15 +230,15 @@ void jugarBlackJack(Jugador *jugador) {
         mostrarCartas("Banca", banca, num_banca);
     }
 
-    // Bonificaciones (igual que antes, no afectan estadísticas)
+    // Bonificaciones (igual que antes, no afectan estadisticas)
     if (num_mano1 == 5 && valorMano(mano1, num_mano1) <= 21) {
         int bono = apuesta * 2;
-        printf("\n¡BONIFICACIÓN! Cinco cartas sin pasarte de 21. Ganas %d fichas extra.\n", bono);
+        printf("\nBONIFICACION! Cinco cartas sin pasarte de 21. Ganas %d fichas extra.\n", bono);
         jugador->fichas += bono;
     }
     if (num_mano1 == 2 && valorMano(mano1, num_mano1) == 21) {
         int bono = apuesta;
-        printf("\n¡BONIFICACIÓN! ¡Blackjack natural! Ganas %d fichas extra.\n", bono);
+        printf("\nBONIFICACION! ¡Blackjack natural! Ganas %d fichas extra.\n", bono);
         jugador->fichas += bono;
     }
     if (num_mano1 >= 3 &&
@@ -216,17 +246,17 @@ void jugarBlackJack(Jugador *jugador) {
         mano1[1].valor == 7 &&
         mano1[2].valor == 7) {
         int bono = apuesta * 5;
-        printf("\n¡BONIFICACIÓN! ¡Tres sietes (777)! Ganas %d fichas extra.\n", bono);
+        printf("\nBONIFICACION! ¡Tres sietes (777)! Ganas %d fichas extra.\n", bono);
         jugador->fichas += bono;
     }
     if (num_mano1 == 6 && valorMano(mano1, num_mano1) <= 21) {
         int bono = apuesta * 4;
-        printf("\n¡BONIFICACIÓN! ¡Seis cartas sin pasarte de 21! Ganas %d fichas extra.\n", bono);
+        printf("\nBONIFICACION! ¡Seis cartas sin pasarte de 21! Ganas %d fichas extra.\n", bono);
         jugador->fichas += bono;
     }
     if (num_mano1 == 5 && valorMano(mano1, num_mano1) == 21) {
         int bono = apuesta * 3;
-        printf("\n¡BONIFICACIÓN! ¡21 exacto con cinco cartas! Ganas %d fichas extra.\n", bono);
+        printf("\nBONIFICACION! ¡21 exacto con cinco cartas! Ganas %d fichas extra.\n", bono);
         jugador->fichas += bono;
     }
 
@@ -256,7 +286,7 @@ void jugarBlackJack(Jugador *jugador) {
         printf("\nEmpate.\n");
     }
 
-    // Actualizar estadísticas usando el mapa
+    // Actualizar estadisticas usando el mapa
     int resultado = 0;
     if (surrender) {
         resultado = -1;
@@ -271,7 +301,7 @@ void jugarBlackJack(Jugador *jugador) {
     stats_map_sum(&jugador->estadisticas, "partidas_jugadas", 1);
 
     if (resultado == 1) {
-        printf("¡Ganaste! Ganas %d fichas.\n", apuesta * 2);
+        printf("+%d fichas.\n", apuesta * 2);
         jugador->fichas += apuesta * 2;
         stats_map_sum(&jugador->estadisticas, "ganadas", 1);
         stats_map_sum(&jugador->estadisticas, "racha_actual", 1);
@@ -279,22 +309,43 @@ void jugarBlackJack(Jugador *jugador) {
         int racha_maxima = stats_map_get(&jugador->estadisticas, "racha_maxima");
         if (racha_actual > racha_maxima)
             stats_map_set(&jugador->estadisticas, "racha_maxima", racha_actual);
+        historial_agregar(
+                    &jugador->historial,
+                    apuesta,                // cantidad apostada
+                    fichas_antes,           // fichas antes de la partida (debes guardar este valor al inicio)
+                    jugador->fichas,        // fichas despues de la partida
+                    "Victoria");
     } else if (resultado == 0) {
         printf("Empate. Recuperas tu apuesta.\n");
         jugador->fichas += apuesta;
         stats_map_sum(&jugador->estadisticas, "empatadas", 1);
+        historial_agregar(
+                    &jugador->historial,
+                    apuesta,                // cantidad apostada
+                    fichas_antes,           // fichas antes de la partida (debes guardar este valor al inicio)
+                    jugador->fichas,        // fichas despues de la partida
+                    "Empate");
     } else {
-        printf("Perdiste %d fichas.\n", apuesta);
+        printf("- %d fichas.\n", apuesta);
         stats_map_sum(&jugador->estadisticas, "perdidas", 1);
         stats_map_set(&jugador->estadisticas, "racha_actual", 0);
+        historial_agregar(
+                    &jugador->historial,
+                    apuesta,                // cantidad apostada
+                    fichas_antes,           // fichas antes de la partida (debes guardar este valor al inicio)
+                    jugador->fichas,        // fichas despues de la partida
+                    "Derrota");
     }
 
     printf("Ahora tienes %d fichas.\n", jugador->fichas);
-
     int gano = (resultado == 1) ? 1 : 0;
-    printf("\nÁrbol de decisiones de esta partida:\n");
+    printf("\nArbol de decisiones de esta partida:\n");
     mostrarArbol(arbol, gano);
 
-    destruirArbol(arbol);
+    // Guarda el arbol en el jugador para mostrarlo despues
+    if (jugador->arbol_actual)
+        destruirArbol(jugador->arbol_actual);
+    jugador->arbol_actual = arbol;
+
     mazo_destruir(mazo);
 }
