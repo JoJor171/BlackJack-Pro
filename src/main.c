@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "blackjack.h"
+#include "arbol.h"
 #include "utils.h"
 
 int main() {
@@ -12,7 +13,7 @@ int main() {
     } 
     else {
         printf("Iniciando Blackjack Pro\n");
-        //fichasIniciales(&jugador.fichas);
+        fichasIniciales(&jugador.fichas);
         inicializarEstadisticas(&jugador);
     }
 
@@ -36,7 +37,7 @@ int main() {
                 mostrarEstadisticas(&jugador);
                 break;
             case 3 :
-                //mostrarArbolDecisiones;
+                //mostrarArbol();
                 break;
             case 4 :
                 //mostrarHistorial;

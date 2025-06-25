@@ -1,5 +1,5 @@
 /*----------------------------------------------------
-  include/mazo.h    (Pila array-based)
+  include/mazo.h    (Pila)
 ----------------------------------------------------*/
 #ifndef MAZO_H
 #define MAZO_H
