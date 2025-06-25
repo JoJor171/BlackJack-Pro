@@ -4,6 +4,9 @@
 #include "carta.h"
 #include "utils.h"
 #include "apuestas_laterales.h"
+#include "arbol.h"
+
+
 
 
 void mostrarMenu() {
@@ -15,6 +18,9 @@ void mostrarMenu() {
 // ...existing code...
 void jugarBlackJack(Jugador *jugador) {
     Mazo *mazo = mazo_crear(1);
+
+    // Nuevo árbol vacío para esta partida
+    NodoDecision *arbol = NULL;  
     if (!mazo) {
         printf("Error al crear el mazo.\n");
         return;
@@ -117,6 +123,7 @@ void jugarBlackJack(Jugador *jugador) {
         scanf(" %c", &opcion);
 
         if (opcion == '1') { // Hit
+            arbol = insertarDecision(arbol, "Hit");
             mano1[num_mano1++] = mazo_robar(mazo);
             printf("\nTus cartas ahora:\n");
             mostrarCartas("Jugador", mano1, num_mano1);
@@ -127,8 +134,10 @@ void jugarBlackJack(Jugador *jugador) {
                 return;
             }
         } else if (opcion == '2') { // Stand
+            arbol = insertarDecision(arbol, "Stand");
             break;
         } else if (opcion == '3') { // Split
+            arbol = insertarDecision(arbol, "Split");
             if (num_mano1 == 2 && mano1[0].valor == mano1[1].valor) {
                 split = 1;
                 mano2[num_mano2++] = mano1[1];
@@ -143,6 +152,7 @@ void jugarBlackJack(Jugador *jugador) {
                 printf("No puedes dividir. Solo puedes dividir si tus dos primeras cartas son iguales.\n");
             }
         } else if (opcion == '4') { // Double Down
+            arbol = insertarDecision(arbol, "Double Down");
             if (num_mano1 == 2) {
                 double_down = 1;
                 mano1[num_mano1++] = mazo_robar(mazo);
@@ -153,6 +163,7 @@ void jugarBlackJack(Jugador *jugador) {
                 printf("Solo puedes doblar con las dos primeras cartas.\n");
             }
         } else if (opcion == '5') { // Surrender
+            arbol = insertarDecision(arbol, "Surrender");
             surrender = 1;
             printf("\nTe has rendido. Pierdes la mitad de tu apuesta.\n");
             mazo_destruir(mazo);
@@ -239,7 +250,12 @@ void jugarBlackJack(Jugador *jugador) {
             printf("Perdiste.\n");
         else
             printf("Empate.\n");
+        printf("\nÁrbol de decisiones de esta partida:\n");
+        mostrarArbol(arbol);
+        printf("NULL\n");
 
+        // Liberar memoria del árbol
+        destruirArbol(arbol);
         mazo_destruir(mazo);
         return;
     }
@@ -315,6 +331,12 @@ void jugarBlackJack(Jugador *jugador) {
     if (split) jugador->split_usado++;
     if (double_down) jugador->double_usado++;
     if (surrender) jugador->surrender_usado++;
+    printf("\nÁrbol de decisiones de esta partida:\n");
+    mostrarArbol(arbol);
+    printf("NULL\n");
+
+    // Liberar memoria del árbol
+    destruirArbol(arbol);
     mazo_destruir(mazo);
 }
 
