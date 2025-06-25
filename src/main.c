@@ -8,10 +8,11 @@ int main() {
     int opcion;
     Jugador jugador;
     if (cargarProgreso(&jugador)) {
-        printf("¡Progreso cargado! Tienes %d fichas.\n", jugador.fichas);
-    } else {
+        printf("Fichas cargadas de sesion anterior = ⛃ %i", jugador.fichas);
+    } 
+    else {
         printf("Iniciando Blackjack Pro\n");
-        fichasIniciales(&jugador.fichas);
+        //fichasIniciales(&jugador.fichas);
         inicializarEstadisticas(&jugador);
     }
 
@@ -20,8 +21,8 @@ int main() {
     do {
         printf("\n===== BLACKJACK CASINO PRO =====\n\n");
         printf("1. Jugar nueva ronda\n");
-        printf("2. Ver estadísticas y logros\n");
-        printf("3. Ver árbol de decisiones\n");
+        printf("2. Ver estadisticas y logros\n");
+        printf("3. Ver arbol de decisiones\n");
         printf("4. Ver historial de apuestas\n");
         printf("5. Guardar progreso\n");
         printf("6. Salir\n");
